@@ -159,4 +159,35 @@ function cd_meta_box_save( $post_id )
 }
 add_action( 'save_post', 'cd_meta_box_save' );
 
+function recent_posts_function($atts, $content = null)
+{
+	extract ( shortcode_atts( array(
+		'num_posts' => 2,
+	), $atts ) );
+
+	$return_string = '<hr>';
+	$return_string .= '<h5>'.$content.'</h5>';
+	$return_string .= '<ul>';
+		query_posts( array( 'orderby' => 'date', 'order' => 'DESC' , 'showposts' => $num_posts ) );
+		if (have_posts()) :
+			while (have_posts()) : the_post();
+				$return_string .= '<li><a href="'.get_permalink().'">'.get_the_title().'</a></li>';
+			endwhile;
+		endif;
+	$return_string .= '</ul>';
+	$return_string .= '<hr>';
+
+	wp_reset_query();
+	return $return_string;
+}
+
+function register_shortcodes()
+{
+	add_shortcode('recent-posts', 'recent_posts_function');
+}
+add_action('init', 'register_shortcodes');
+add_filter('widget_text', 'do_shortcode');
+add_filter( 'comment_text', 'do_shortcode' );
+add_filter( 'the_excerpt', 'do_shortcode');
+
 ?>
