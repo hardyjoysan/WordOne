@@ -1,1 +1,1 @@
-# WordOne - Only For Personal Developent/Testing
+# WordOne - Personal WP Development Environment
